@@ -1,0 +1,125 @@
+# Aether 🦋
+
+<div align="center">
+
+  ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+  ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+  ![Python](https://img.shields.io/badge/Python-3.8%2B-yellow?style=for-the-badge)
+  ![Frontend](https://img.shields.io/badge/Frontend-Vanilla%20JS%20%7C%20CSS3-orange?style=for-the-badge)
+
+  <h3 align="center">Quintessence. Pure Air. The Ultimate YouTube Experience.</h3>
+
+  <p align="center">
+    A next-generation media downloader featuring a stunning <b>3D Glassmorphism UI</b>, interactive <b>butterfly effects</b>, and immersive <b>neon aesthetics</b>.
+  </p>
+</div>
+
+---
+
+## 🌟 Overview
+
+**Aether** transforms the mundane task of downloading media into a visual journey. Built with a robust **Flask** backend and a highly optimized **Vanilla JS** frontend, it delivers performance without compromising on beauty.
+
+The interface is alive—reacting to your mouse movements, tilting in 3D space, and trailing your cursor with a swarm of digital butterflies, all set against a responsive, animated neon mesh gradient.
+
+## ✨ Key Features
+
+### 🎨 Visual & UI
+- **3D Glassmorphism Interface**: Premium frosted glass cards with dynamic lighting and depth.
+- **Reactive Tilt Effects**: UI elements physically respond to mouse position and mobile gyroscope data.
+- **Butterfly Particle System**:
+  - **Ghost Cursor Trail**: A magical trail of butterflies follows your every interaction.
+  - **Performance First**: Optimized CSS-only animations for 60FPS fluid motion.
+- **Neon Mesh Background**: A living, breathing background that shifts through the Aether color palette (`#8b5cf6`, `#06b6d4`, `#ec4899`).
+
+### ⚡ Core Functionality
+- **Smart URL Detection**: Automatically distinguishes between Single Videos, Music, and Playlists.
+- **High-Fidelity Downloads**:
+  - **Video**: Up to **4K Resolution**.
+  - **Audio**: **320kbps MP3** conversion with metadata integration.
+- **Playlist Architecture**: One-click bulk downloads, automatically zipped for convenience.
+- **Real-Time Telemetry**: Live Websocket-style updates for download speed, ETA, and progress.
+- **Resilient Bypass Engine**: Advanced cookie management to access age-gated and premium content.
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Backend** | Python & Flask | Robust server-side logic and request handling. |
+| **Engine** | yt-dlp | The gold standard for media extraction. |
+| **Frontend** | HTML5 & CSS3 | Semantic structure with advanced animations. |
+| **Scripting** | Vanilla JavaScript | Lightweight, dependency-free interactions. |
+| **Effects** | Vanilla-Tilt.js | 3D parallax hover effects. |
+
+---
+
+## � Getting Started
+
+### Prerequisites
+
+*   **Python 3.8+** represents the core runtime.
+*   **FFmpeg** is critical for audio conversion and video merging.
+    *   [Download FFmpeg](https://ffmpeg.org/download.html)
+    *   *Note: Ensure FFmpeg is added to your system's PATH.*
+
+### Installation
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/abhianand123/aether-downloader.git
+    cd aether-downloader
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Launch Aether**
+    ```bash
+    python app.py
+    ```
+    *Terminal Tip: If `python` fails, try `py` or `python3`.*
+
+4.  **Experience**
+    Open your browser and traverse to:
+    `http://localhost:5000`
+
+---
+
+## 🔧 Troubleshooting
+
+| Issue | Possible Solution |
+|-------|-------------------|
+| **Audio Conversion Failed** | FFmpeg is likely missing from your PATH. Install it and restart your terminal. |
+| **Download Stuck at 0%** | Check your internet connection or try updating `yt-dlp` (`pip install -U yt-dlp`). |
+| **403 Forbidden Error** | The video might be region-locked or premium. Aether tries to bypass this, but valid cookies may be needed. |
+
+---
+
+## 📂 Project Structure
+
+```text
+Aether/
+├── app.py              # Application Entry Point & Route Handlers
+├── downloads/          # Media Destination (Auto-generated)
+├── static/
+│   ├── style.css       # The Design System (Glassmorphism & Gradients)
+│   └── script.js       # The Brains (Butterfly System & API Logic)
+├── templates/
+│   └── index.html      # The Canavs (HTML Structure)
+└── requirements.txt    # Dependency Manifest
+```
+
+---
+
+<div align="center">
+  
+  **Created with ❤️ by Abhi Anand**
+  
+  [Instagram](https://instagram.com/chessbasebgs) • [GitHub](https://github.com/abhianand123)
+
+  *© 2025 Aether Project. All Rights Reserved.*
+</div>
