@@ -41,50 +41,96 @@ body {
     align-items: center;
     overflow-x: hidden;
     margin: 0;
-
-    /* Mesh Gradient Background */
-    background-color: #0f172a;
-    background-image:
-        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.4) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.4) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.4) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(168, 85, 247, 0.4) 0px, transparent 50%);
-    background-attachment: fixed;
-    background-size: 150% 150%;
-    animation: gradientShift 15s ease infinite;
+    background-color: #050510;
+    /* Darker base for better contrast */
 }
 
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* Glassmorphism Overlay (Optional, for more depth) */
-body::before {
-    content: '';
+/* Nebula Background System */
+.bfyaNebula {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background:
-        radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-    animation: bgPulse 15s ease-in-out infinite alternate;
-    z-index: -1;
-    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+    background: #050510;
 }
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: moveOrb 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.orb-1 {
+    width: 60vw;
+    height: 60vw;
+    background: #8b5cf6;
+    /* Aether Purple */
+    top: -10%;
+    left: -10%;
+    animation-delay: -2s;
+    animation-duration: 25s;
+}
+
+.orb-2 {
+    width: 50vw;
+    height: 50vw;
+    background: #06b6d4;
+    /* Aether Cyan */
+    bottom: -10%;
+    right: -10%;
+    animation-delay: -5s;
+    animation-duration: 30s;
+}
+
+.orb-3 {
+    width: 40vw;
+    height: 40vw;
+    background: #ec4899;
+    /* Aether Pink */
+    top: 30%;
+    left: 30%;
+    filter: blur(60px);
+    opacity: 0.4;
+    animation-delay: -8s;
+    animation-duration: 35s;
+}
+
+.orb-4 {
+    width: 30vw;
+    height: 30vw;
+    background: #a855f7;
+    /* Deep Violet */
+    bottom: 10%;
+    left: 10%;
+    animation-delay: -12s;
+    animation-duration: 20s;
+}
+
+@keyframes moveOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(10%, 15%) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-5%, 20%) scale(0.9);
+    }
+
+    100% {
+        transform: translate(15%, -10%) scale(1.05);
+    }
+}
+
+/* Enhanced*/
+/* Old glass overlay removed - standardized in body::before above */
 
 body::after {
     content: '';
