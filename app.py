@@ -44,14 +44,18 @@ def get_opts():
             'Accept-Language': 'en-us,en;q=0.5',
             'Sec-Fetch-Mode': 'navigate',
         },
-        # Use extractors that work better on servers
+        # Use iOS client which bypasses bot detection better
         'extractor_args': {
             'youtube': {
-                'skip': ['hls', 'dash'],  # Prefer direct formats
-                'player_skip': ['webpage'],
-                'player_client': ['android', 'web'],
+                'player_client': ['ios', 'android'],  # iOS client works best
+                'skip': ['hls', 'dash'],
             }
         },
+        # Retry options
+        'extractor_retries': 3,
+        'fragment_retries': 3,
+        # Don't check certificates (sometimes helps)
+        'nocheckcertificate': True,
     }
     return opts
 
@@ -62,7 +66,24 @@ def get_video_info(url):
             info = ydl.extract_info(url, download=False)
             return info
         except Exception as e:
-            print(f"Error fetching video info: {e}")
+            error_msg = str(e)
+            print(f"Error fetching video info: {error_msg}")
+            
+            # If bot detection error, try with different approach
+            if "Sign in" in error_msg or "bot" in error_msg:
+                print("Retrying with alternative extractor settings...")
+                ydl_opts['extractor_args'] = {
+                    'youtube': {
+                        'player_client': ['mweb'],  # Mobile web as fallback
+                    }
+                }
+                try:
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl2:
+                        info = ydl2.extract_info(url, download=False)
+                        return info
+                except Exception as e2:
+                    print(f"Retry also failed: {e2}")
+                    return None
             return None
 
 def extract_qualities(info):
