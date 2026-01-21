@@ -25,4 +25,5 @@ RUN mkdir -p downloads
 EXPOSE 5000
 
 # Use gunicorn for production
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "app:app", "--workers", "2", "--timeout", "120"]
+# Using shell form to allow $PORT variable expansion
+CMD gunicorn --bind 0.0.0.0:${PORT:-5000} app:app --workers 2 --timeout 120
