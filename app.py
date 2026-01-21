@@ -31,31 +31,38 @@ def cleanup_old_downloads():
     except Exception as e:
         print(f"Error cleaning up: {e}")
 
-def get_opts(use_cookies=False):
+def get_opts():
+    """Get yt-dlp options optimized for server environment"""
     opts = {
         'quiet': True,
         'no_warnings': True,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        # Better user agent
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        # Additional headers to avoid bot detection
+        'http_headers': {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-us,en;q=0.5',
+            'Sec-Fetch-Mode': 'navigate',
+        },
+        # Use extractors that work better on servers
+        'extractor_args': {
+            'youtube': {
+                'skip': ['hls', 'dash'],  # Prefer direct formats
+                'player_skip': ['webpage'],
+                'player_client': ['android', 'web'],
+            }
+        },
     }
-    if use_cookies:
-        opts['cookiesfrombrowser'] = ('chrome', 'firefox', 'edge')
     return opts
 
 def get_video_info(url):
-    ydl_opts = get_opts(use_cookies=False)
+    ydl_opts = get_opts()
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
             info = ydl.extract_info(url, download=False)
             return info
         except Exception as e:
-            if "Sign in" in str(e) or "403" in str(e):
-                ydl_opts = get_opts(use_cookies=True)
-                try:
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl2:
-                        info = ydl2.extract_info(url, download=False)
-                        return info
-                except Exception:
-                    return None
+            print(f"Error fetching video info: {e}")
             return None
 
 def extract_qualities(info):
@@ -111,7 +118,7 @@ def progress_hook(d, download_id):
 
 def perform_download(url, mode, quality, download_id):
     ensure_dir(DOWNLOAD_DIR)
-    ydl_opts = get_opts(use_cookies=False)
+    ydl_opts = get_opts()
     ydl_opts['progress_hooks'] = [lambda d: progress_hook(d, download_id)]
     
     # Use 3 underscores as delimiter
