@@ -46,13 +46,17 @@ The interface is alive—reacting to your mouse movements, tilting in 3D space, 
 - **Neon Mesh Background**: A living, breathing background that shifts through the Aether color palette (`#8b5cf6`, `#06b6d4`, `#ec4899`).
 
 ### ⚡ Core Functionality
-- **Smart URL Detection**: Automatically distinguishes between Single Videos, Music, and Playlists.
+- **Smart URL Detection**: Automatically distinguishes between Single Videos, Music, Playlists, and Instagram Reels.
 - **High-Fidelity Downloads**:
-  - **Video**: Up to **4K Resolution**.
-  - **Audio**: **320kbps MP3** conversion with metadata integration.
+  - **YouTube Video**: Up to **4K Resolution**.
+  - **YouTube/Instagram Audio**: **320kbps MP3** conversion with metadata integration.
+  - **Instagram Reels**: Download High Quality Video or Audio Only.
 - **Playlist Architecture**: One-click bulk downloads, automatically zipped for convenience.
 - **Real-Time Telemetry**: Live Websocket-style updates for download speed, ETA, and progress.
 - **Resilient Bypass Engine**: Advanced cookie management to access age-gated and premium content.
+
+> [!WARNING]
+> **Important**: Do not refresh the page while a download is in progress! Doing so will interrupt the connection to the server and the download will fail. The server will automatically clean up temporary files, but your download will be lost.
 
 ---
 

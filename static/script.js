@@ -4,12 +4,21 @@ const state = {
     url: '',
     videoInfo: null,
     selectedQuality: null,
-    downloadId: null
+    downloadId: null,
+    isDownloading: false
 };
 
 function init() {
     initButterflies();
     setupEventListeners();
+
+    // Prevent accidental page refresh/close during download
+    window.addEventListener('beforeunload', (e) => {
+        if (state.isDownloading) {
+            e.preventDefault();
+            e.returnValue = ''; // Chrome requires returnValue to be set
+        }
+    });
 
     VanillaTilt.init(document.querySelectorAll(".glow-card"), {
         max: 15,
@@ -96,6 +105,7 @@ function initButterflies() {
 
 function setupEventListeners() {
     document.getElementById('ytCard').addEventListener('click', () => selectPlatform('youtube'));
+    document.getElementById('instaCard').addEventListener('click', () => selectPlatform('instagram'));
     document.getElementById('musicCard').addEventListener('click', () => selectPlatform('music'));
 
     document.getElementById('singleCard').addEventListener('click', () => selectMode('single'));
@@ -121,13 +131,23 @@ function selectPlatform(platform) {
     const cards = document.querySelectorAll('.platform-card');
     cards.forEach(card => card.classList.add('selected-exit'));
 
+    const urlInput = document.getElementById('urlInput');
+
     setTimeout(() => {
         if (platform === 'youtube') {
             document.getElementById('step2Title').textContent = 'Ready to download video';
+            urlInput.placeholder = "Paste YouTube URL here...";
+            document.getElementById('modeCards').classList.add('hidden');
+            goToStep(3);
+        } else if (platform === 'instagram') {
+            document.getElementById('step2Title').textContent = 'Ready to download Instagram Reel';
+            urlInput.placeholder = "Paste Instagram Reel URL here...";
             document.getElementById('modeCards').classList.add('hidden');
             goToStep(3);
         } else {
             document.getElementById('step2Title').textContent = 'What do you want to download?';
+            // Music URL is input in step 3, so we can set it here or generic
+            urlInput.placeholder = "Paste YouTube URL here...";
             document.getElementById('modeCards').classList.remove('hidden');
             document.getElementById('singleCard').querySelector('h3').textContent = 'Single Track';
             document.getElementById('singleCard').querySelector('p').textContent = 'Download one song as MP3';
@@ -243,6 +263,15 @@ function showVideoInfo(data) {
         const bestAudioOption = createQualityOption('Best Audio (MP3)', 'audio', 'best', false);
         qualityGrid.appendChild(bestAudioOption);
 
+    } else if (state.platform === 'instagram') {
+        // Instagram usually doesn't return multiple qualities in the same way, or we just want simple options
+        // We will offer "Best Video" and "Best Audio"
+        const bestVideoOption = createQualityOption('Best Quality Video', 'video', 'best', true);
+        qualityGrid.appendChild(bestVideoOption);
+
+        const bestAudioOption = createQualityOption('Audio Only (MP3)', 'audio', 'best', false);
+        qualityGrid.appendChild(bestAudioOption);
+
     } else {
         data.audio_qualities.forEach((q, index) => {
             const option = createQualityOption(q.label, 'audio', q.abr, index === 0);
@@ -320,6 +349,7 @@ async function startPlaylistDownload() {
 }
 
 async function initiateDownload(mode, quality) {
+    state.isDownloading = true; // Start blocking Refresh
     goToStep(4);
 
     document.querySelector('.progress-section').classList.remove('hidden');
@@ -354,6 +384,7 @@ async function initiateDownload(mode, quality) {
         trackProgress(data.download_id);
 
     } catch (error) {
+        state.isDownloading = false; // Stop blocking Refresh if init failed
         showError('Failed to start download');
     }
 }
@@ -368,6 +399,15 @@ function trackProgress(downloadId) {
 
         if (progress.status === 'complete') {
             eventSource.close();
+
+            // Trigger browser download
+            const link = document.createElement('a');
+            link.href = `/api/download_file/${downloadId}`;
+            link.download = ''; // Browser will infer filename from Content-Disposition
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
             showComplete();
         } else if (progress.status === 'error') {
             eventSource.close();
@@ -420,12 +460,14 @@ function updateProgressUI(progress) {
 }
 
 function showComplete() {
+    state.isDownloading = false; // Stop blocking Refresh
     document.body.classList.remove('loading-active');
     document.querySelector('.progress-section').classList.add('hidden');
     document.getElementById('completeSection').classList.remove('hidden');
 }
 
 function showError(message) {
+    state.isDownloading = false; // Stop blocking Refresh
     document.body.classList.remove('loading-active');
     document.querySelector('.progress-section').classList.add('hidden');
     document.getElementById('errorSection').classList.remove('hidden');
